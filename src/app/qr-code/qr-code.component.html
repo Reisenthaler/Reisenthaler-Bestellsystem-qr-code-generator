@@ -1,0 +1,6 @@
+<div #qrCodeContainer>
+  <div *ngFor="let qrCode of qrCodes">
+    <p>{{ qrCode.name }}</p>
+    <img [src]="qrCode.qrCode" alt="QR Code">
+  </div>
+</div>
