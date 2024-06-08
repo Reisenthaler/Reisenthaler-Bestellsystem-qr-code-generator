@@ -20,7 +20,11 @@ export class QrCodeComponent implements OnInit {
     this.http.getTische().subscribe((data: any) => {
       data.forEach((item: any) =>{
 
-        this.qrDataArray.push({ url: "http://localhost:4200/?tisch=" + item, name: item });
+        let encodedItem = encodeURIComponent(item);
+        let url = `http://192.168.1.2:4200/?tischname=${encodedItem}`;
+
+        this.qrDataArray.push({ url:url , name: item });
+
       });
       this.generateQRCodes();
     });
@@ -36,5 +40,35 @@ export class QrCodeComponent implements OnInit {
         this.qrCodes.push({ name: item.name, qrCode: qrCode });
       });
     });
+  }
+
+
+  downloadWordDocument() {
+    let imagesHtml = '';
+    this.qrCodes.forEach((qrCodeData, index) => {
+      imagesHtml += `<p>${qrCodeData.name}:</p><img src="${qrCodeData.qrCode}" alt="QR Code ${index + 1}" /><br/>`;
+    });
+
+    const wordContent = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><title></title></head>
+      <body>
+      <h1></h1>
+      <p></p>
+      ${imagesHtml}
+      </body>
+      </html>`;
+
+    const blob = new Blob(['\ufeff', wordContent], {
+      type: 'application/msword'
+    });
+
+    const urlBlob = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = urlBlob;
+    link.download = 'Reisenthaler-Bestellsystem-QrCodes.doc';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }

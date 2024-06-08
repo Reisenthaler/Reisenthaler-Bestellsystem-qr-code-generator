@@ -1,6 +1,9 @@
 <div #qrCodeContainer>
+  <button class="dowanloadWordDocumentButton" (click)="downloadWordDocument()">QrCodes herunterladen</button>
   <div *ngFor="let qrCode of qrCodes">
     <p>{{ qrCode.name }}</p>
     <img [src]="qrCode.qrCode" alt="QR Code">
   </div>
+  <button class="dowanloadWordDocumentButton"  (click)="downloadWordDocument()">QrCodes herunterladen</button>
+
 </div>
